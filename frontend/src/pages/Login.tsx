@@ -23,7 +23,6 @@ export default function Login() {
         return
       }
 
-      // Signed in successfully; navigate to home or dashboard
       navigate('/')
     } catch (err) {
       setError((err as Error).message)
@@ -33,51 +32,50 @@ export default function Login() {
   }
 
   return (
-    <div style={{ maxWidth: 420, margin: '40px auto', padding: 20 }}>
-      <h2>Đăng nhập</h2>
+    <div className="max-w-md mx-auto mt-16 p-6 bg-white/5 rounded-lg shadow-sm">
+      <h2 className="text-2xl font-semibold mb-4">Đăng nhập</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ display: 'block', marginBottom: 6 }}>Email</label>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ width: '100%', padding: 8 }}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white/90 text-black"
             placeholder="you@example.com"
           />
         </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ display: 'block', marginBottom: 6 }}>Mật khẩu</label>
+        <div>
+          <label className="block text-sm font-medium mb-2">Mật khẩu</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{ width: '100%', padding: 8 }}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white/90 text-black"
             placeholder="••••••••"
           />
         </div>
 
-        {error && (
-          <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>
-        )}
+        {error && <div className="text-red-600 text-sm">{error}</div>}
 
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <button type="submit" style={{ padding: '8px 14px' }} disabled={loading}>
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 bg-indigo-600 text-black rounded-md hover:bg-indigo-700 disabled:opacity-60"
+          >
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
-          <Link to="/">Hủy</Link>
+          <Link to="/" className="text-sm text-gray-400 hover:text-gray-200">
+            quay về trang chủ
+          </Link>
         </div>
       </form>
 
-      <div style={{ marginTop: 16 }}>
-        <Link to="/signup">Tạo tài khoản mới</Link>
-        <span style={{ margin: '0 8px' }}>|</span>
-        <Link to="/forgot-password">Quên mật khẩu</Link>
-      </div>
     </div>
   )
 }
