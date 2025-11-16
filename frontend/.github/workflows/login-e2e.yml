@@ -1,0 +1,51 @@
+name: E2E Login Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e-login:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Start Vite dev server
+      - name: Start dev server
+        run: |
+          npm run dev -- --host 0.0.0.0 --port 5173 &
+          npx wait-on http://127.0.0.1:5173
+
+      # Run Cypress login tests (headless) + generate report
+      - name: Run Cypress E2E Login tests
+        run: npm run test:e2e:ci
+
+      # Upload test reports (Generate test reports)
+      - name: Upload JUnit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: login-e2e-report
+          path: reports/junit-login.xml
+
+      # (Optional) upload video/screenshot nếu muốn
+      - name: Upload Cypress artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/videos/**
+            cypress/screenshots/**
