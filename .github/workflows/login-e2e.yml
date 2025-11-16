@@ -10,9 +10,9 @@ jobs:
   login-e2e:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: frontend   # change if your frontend folder name is different
+    # defaults:
+    #   run:
+    #     working-directory: frontend   
 
     steps:
       - name: Checkout repository
@@ -31,8 +31,11 @@ jobs:
       - name: Run Cypress login tests
         uses: cypress-io/github-action@v6
         with:
-          install: false
-          command: npm run test:e2e:ci
+            working-directory: frontend      
+            install: false
+            start: npm run dev              
+            wait-on: 'http://localhost:5173'
+            command: npm run test:e2e:ci
 
       - name: Upload Cypress artifacts (screenshots/videos)
         if: always()
