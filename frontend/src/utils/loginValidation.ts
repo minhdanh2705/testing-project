@@ -16,13 +16,14 @@ export function validateLoginForm(username: string, password: string): LoginVali
     usernameError = 'tên đăng nhập không hợp lệ'
   }
 
-  if (!trimmedPassword) {
-    passwordError = 'Mật khẩu là bắt buộc'
-  } else if (trimmedPassword.length < 6) {
-    passwordError = 'Mật khẩu tối thiểu 6 ký tự'
-  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(trimmedPassword)) {
-    passwordError = 'Mật khẩu không đúng định dạng'
-  }
+if (!trimmedPassword) {
+  passwordError = 'Mật khẩu là bắt buộc'
+} else if (trimmedPassword.length < 6 || trimmedPassword.length > 100) {
+  passwordError = 'Mật khẩu phải từ 6 đến 100 ký tự'
+} else if (!(/[A-Za-z]/.test(trimmedPassword) && /\d/.test(trimmedPassword))) {
+  passwordError = 'Mật khẩu phải chứa cả chữ và số'
+}
+
 
   return { usernameError, passwordError }
 }

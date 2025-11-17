@@ -1,4 +1,6 @@
+/// <reference types="cypress" />
 // cypress/e2e/pages/products/ProductListPage.ts
+declare const cy: any;
 
 export class ProductListPage {
   visit() {
@@ -11,10 +13,18 @@ export class ProductListPage {
   }
 
   rowByName(name: string) {
-    // Tìm cell chứa tên, sau đó lấy ra cả dòng (tr) tương ứng
+    const selector = '[data-text="product-row"]';
+    const inputSelector = '[data-text="product-inline-name-input"]';
+
     return cy
-      .contains('[data-text="product-row"] td, [data-text="product-row"] th', name)
-      .closest('[data-text="product-row"]');
+      .get(selector)
+      .filter((_, row) => {
+        const text = (row.textContent || '').toLowerCase();
+        const input = row.querySelector(inputSelector) as HTMLInputElement | null;
+        const inputValue = input?.value.toLowerCase() || '';
+        return text.includes(name.toLowerCase()) || inputValue.includes(name.toLowerCase());
+      })
+      .first();
   }
 
   // Buttons / actions
@@ -27,11 +37,15 @@ export class ProductListPage {
   }
 
   deleteButtonFor(name: string) {
-    // Tìm đúng row chứa tên, rồi tìm nút xóa trong dòng đó
-    return cy
-      .contains('[data-text="product-row"] td, [data-text="product-row"] th', name)
-      .closest('[data-text="product-row"]')
-      .find('[data-text="product-delete-button"]');
+    return this.rowByName(name).find('[data-text="product-delete-button"]');
+  }
+
+  inlinePriceInput(name: string) {
+    return this.rowByName(name).find('[data-text="product-inline-price-input"]');
+  }
+
+  inlineSaveButton(name: string) {
+    return this.rowByName(name).find('[data-text="product-inline-save-button"]');
   }
 
   confirmDeleteButton() {

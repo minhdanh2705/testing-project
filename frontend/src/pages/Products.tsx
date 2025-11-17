@@ -338,6 +338,7 @@ export default function Products() {
                             onChange={(e) => setEditForm(editForm ? { ...editForm, name: e.target.value } : null)}
                             className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="Tên sản phẩm"
+                            data-text="product-inline-name-input"
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -347,6 +348,7 @@ export default function Products() {
                             onChange={(e) => setEditForm(editForm ? { ...editForm, description: e.target.value } : null)}
                             className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="Mô tả"
+                            data-text="product-inline-description-input"
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -355,6 +357,7 @@ export default function Products() {
                             value={editForm?.price || ''}
                             onChange={(e) => setEditForm(editForm ? { ...editForm, price: Number(e.target.value) } : null)}
                             className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            data-text="product-inline-price-input"
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -363,6 +366,7 @@ export default function Products() {
                             value={editForm?.stockQuantity || ''}
                             onChange={(e) => setEditForm(editForm ? { ...editForm, stockQuantity: Number(e.target.value) } : null)}
                             className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            data-text="product-inline-quantity-input"
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -372,6 +376,7 @@ export default function Products() {
                             onChange={(e) => setEditForm(editForm ? { ...editForm, status: e.target.value } : null)}
                             className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="ACTIVE"
+                            data-text="product-inline-status-input"
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -380,6 +385,7 @@ export default function Products() {
                               onClick={handleSave}
                               disabled={saving}
                               className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              data-text="product-inline-save-button"
                             >
                               {saving ? 'Đang lưu...' : 'Lưu'}
                             </button>
@@ -387,6 +393,7 @@ export default function Products() {
                               onClick={handleCancel}
                               disabled={saving}
                               className="px-3 py-1.5 bg-slate-200 text-slate-700 text-sm rounded-md hover:bg-slate-300 transition-colors disabled:opacity-50"
+                              data-text="product-inline-cancel-button"
                             >
                               Hủy
                             </button>

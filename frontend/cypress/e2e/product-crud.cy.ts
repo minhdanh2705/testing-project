@@ -104,16 +104,11 @@ describe("Product - E2E CRUD Scenarios", () => {
     listPage.rowByName("Pepsi").should("exist");
   });
 
-  // c) Test Update product (0.5 điểm)
   it("c) Update product", () => {
     listPage.editButtonFor("Coca Cola").click();
 
-    listPage
-      .rowByName("Coca Cola")
-      .within(() => {
-        cy.get('input[type="number"]').first().clear().type("18000");
-        cy.contains("button", "Lưu").click();
-      });
+    listPage.inlinePriceInput("Coca Cola").clear().type("18000");
+    listPage.inlineSaveButton("Coca Cola").click();
 
     cy.wait("@updateProduct");
 
