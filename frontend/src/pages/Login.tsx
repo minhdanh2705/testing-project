@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { setAuth } from '../utils/auth'
 import { login as apiLogin } from '../services/authService'
+import { consumeRegisterSuccess, parseLoginError } from '../utils/loginUtils'
 
 export default function Login() {
   const [email, setEmail] = useState<string>('')
@@ -12,11 +13,8 @@ export default function Login() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const succ = localStorage.getItem('registerSuccess')
-    if (succ === 'true') {
-      setInfo('Đăng kí thành công. Vui lòng đăng nhập.')
-      localStorage.removeItem('registerSuccess')
-    }
+    const msg = consumeRegisterSuccess()
+    if (msg) setInfo(msg)
   }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -33,11 +31,7 @@ export default function Login() {
       navigate('/products')
     } catch (err: any) {
       console.error(err)
-      if (err.message === 'Unauthorized') {
-        setError('Sai email hoặc mật khẩu')
-      } else {
-        setError(err.message || 'Không kết nối được tới server')
-      }
+      setError(parseLoginError(err))
     } finally {
       setLoading(false)
     }
