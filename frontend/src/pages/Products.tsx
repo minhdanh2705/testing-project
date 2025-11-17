@@ -1,17 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { isAuthenticated, getToken } from '../utils/auth'
+import { isAuthenticated } from '../utils/auth'
+import {
+  getProducts as apiGetProducts,
+  createProduct as apiCreateProduct,
+  updateProduct as apiUpdateProduct,
+  deleteProduct as apiDeleteProduct,
+  ProductDto,
+} from '../services/productService'
 
-const API_BASE_URL = 'http://localhost:8080'
-
-interface Product {
-  id: string // UUID from backend
-  name: string
-  description: string | null
-  price: number
-  stockQuantity: number
-  status: string | null
-}
+type Product = ProductDto
 
 export default function Products() {
   const navigate = useNavigate()
@@ -33,26 +31,12 @@ export default function Products() {
   })
   const [creating, setCreating] = useState<boolean>(false)
 
-  // Fetch products from API
+  // Fetch products from API (via service)
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const token = getToken()
-      
-      const response = await fetch(`${API_BASE_URL}/api/products`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error('Không thể tải danh sách sản phẩm')
-      }
-
-      const data = await response.json()
+      const data = await apiGetProducts()
       setProducts(data)
     } catch (err) {
       console.error('Error fetching products:', err)
@@ -103,26 +87,13 @@ export default function Products() {
     try {
       setSaving(true)
       setError(null)
-      const token = getToken()
-
-      const response = await fetch(`${API_BASE_URL}/api/products/${editForm.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
-        body: JSON.stringify({
-          name: editForm.name,
-          description: editForm.description || '',
-          price: editForm.price,
-          stockQuantity: editForm.stockQuantity,
-          status: editForm.status || 'ACTIVE',
-        }),
+      await apiUpdateProduct(editForm.id, {
+        name: editForm.name,
+        description: editForm.description || '',
+        price: editForm.price,
+        stockQuantity: editForm.stockQuantity,
+        status: editForm.status || 'ACTIVE',
       })
-
-      if (!response.ok) {
-        throw new Error('Không thể cập nhật sản phẩm')
-      }
 
       // Refresh the product list
       await fetchProducts()
@@ -149,19 +120,7 @@ export default function Products() {
     try {
       setDeleting(id)
       setError(null)
-      const token = getToken()
-
-      const response = await fetch(`${API_BASE_URL}/api/products/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error('Không thể xóa sản phẩm')
-      }
+      await apiDeleteProduct(id)
 
       // Refresh the product list
       await fetchProducts()
@@ -177,20 +136,7 @@ export default function Products() {
     try {
       setCreating(true)
       setError(null)
-      const token = getToken()
-
-      const response = await fetch(`${API_BASE_URL}/api/products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
-        body: JSON.stringify(newProduct),
-      })
-
-      if (!response.ok) {
-        throw new Error('Không thể tạo sản phẩm')
-      }
+      await apiCreateProduct(newProduct)
 
       // Refresh the product list
       await fetchProducts()
